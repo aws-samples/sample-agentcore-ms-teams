@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgentCore Meeting Assistant</title>
+  <script src="/vendor/teams-js/2.19.0/MicrosoftTeams.min.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 12px; background: #f5f5f5; color: #242424; }
+    h3 { margin: 0 0 8px; color: #FF9900; }
+    #log { height: 60vh; overflow-y: auto; background: #fff; border-radius: 6px; padding: 8px; font-size: 13px; }
+    .msg { margin: 6px 0; padding: 8px; border-radius: 6px; }
+    .user { background: #e8eafc; text-align: right; }
+    .bot { background: #f0f0f0; white-space: pre-wrap; }
+    #row { display: flex; gap: 6px; margin-top: 8px; }
+    #q { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+    button { padding: 8px 12px; border: none; border-radius: 6px; background: #FF9900; color: #fff; cursor: pointer; }
+    button:disabled { background: #ccc; }
+    .hint { font-size: 11px; color: #666; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <h3>AgentCore Meeting Assistant</h3>
+  <div id="log"></div>
+  <div id="row">
+    <input id="q" placeholder="Ask about this meeting..." />
+    <button id="send">Send</button>
+  </div>
+  <div class="hint">Try: "summarize this meeting", "what did we decide last time", "save action item: ..."</div>
+
+  <script>
+// DATA PROTECTION NOTE: this page handles personal data — user SSO tokens, user and meeting IDs, and meeting content sent to the agent. Handling this data may be subject to
+// GDPR and similar frameworks. Under the AWS shared responsibility model, customers
+// deploying this sample are responsible for applicable data-protection requirements.
+// See https://aws.amazon.com/compliance/shared-responsibility-model/
+    let ssoToken = null, userId = "unknown-user", meetingId = "default-session", joinUrl = "";
+    const history = [];  // [{role, content}] conversation turns
+    const log = document.getElementById("log");
+    const q = document.getElementById("q");
+    const sendBtn = document.getElementById("send");
+
+    function add(text, cls, role) {
+      const d = document.createElement("div");
+      d.className = "msg " + cls;
+      d.textContent = text;
+      log.appendChild(d);
+      log.scrollTop = log.scrollHeight;
+      if (role) history.push({ role: role, content: text });
+    }
+
+    microsoftTeams.app.initialize().then(async function () {
+      const ctx = await microsoftTeams.app.getContext();
+      userId = (ctx.user && ctx.user.id) || userId;
+      meetingId = (ctx.meeting && ctx.meeting.id) || (ctx.chat && ctx.chat.id) || meetingId;
+      // Best-effort meeting join URL
+      try {
+        const d = await microsoftTeams.meeting.getMeetingDetailsVerbose();
+        joinUrl = (d && d.details && d.details.joinUrl) || "";
+      } catch (e) { /* not always available */ }
+
+      await acquireToken();
+    });
+
+    async function acquireToken() {
+      try {
+        ssoToken = await microsoftTeams.authentication.getAuthToken();
+        add("Connected. I'm acting on your behalf for this meeting.", "bot");
+        return true;
+      } catch (e) {
+        const msg = (e && (e.message || e)) ? (e.message || String(e)) : "unknown";
+        add("SSO error: " + msg, "bot");
+        // Fallback: interactive consent popup via auth-start
+        return false;
+      }
+    }
+
+    function interactiveLogin() {
+      return new Promise(function (resolve) {
+        microsoftTeams.authentication.authenticate({
+          url: window.location.origin + "/auth-start.html",
+          width: 600, height: 535,
+          successCallback: function (token) { ssoToken = token; add("Signed in.", "bot"); resolve(true); },
+          failureCallback: function (reason) { add("Sign-in failed: " + reason, "bot"); resolve(false); },
+        });
+      });
+    }
+
+    async function send() {
+      const text = q.value.trim();
+      if (!text) return;
+      add(text, "user", "user");
+      q.value = "";
+      sendBtn.disabled = true;
+
+      if (!ssoToken) {
+        const ok = await acquireToken();
+        if (!ok) { await interactiveLogin(); }
+        if (!ssoToken) { sendBtn.disabled = false; return; }
+      }
+      // If asking to summarize and we have a join URL, append it so the agent can fetch the transcript
+      let prompt = text;
+      if (joinUrl && /summar|transcript|recap/i.test(text)) {
+        prompt += "\n\n(Meeting join URL: " + joinUrl + ")";
+      }
+      try {
+        const resp = await fetch("/api/agent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ssoToken: ssoToken, prompt: prompt, userId: userId, meetingId: meetingId,
+            history: history.slice(0, -1),  // prior turns (exclude the one we just added)
+          }),
+        });
+        const data = await resp.json();
+        add(data.answer || data.error || JSON.stringify(data), "bot", "assistant");
+      } catch (e) {
+        add("Error: " + e.message, "bot");
+      } finally {
+        sendBtn.disabled = false;
+      }
+    }
+    sendBtn.addEventListener("click", send);
+    q.addEventListener("keydown", function (e) { if (e.key === "Enter") send(); });
+  </script>
+</body>
+</html>

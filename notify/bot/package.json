@@ -1,0 +1,29 @@
+{
+  "name": "teams-notify-bot",
+  "version": "1.0.0",
+  "description": "Teams bot that proactively notifies any user or channel on behalf of an AgentCore agent",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "botbuilder": "4.23.3",
+    "botframework-connector": "4.23.3",
+    "dotenv": "16.6.1",
+    "restify": "11.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.0",
+    "@types/restify": "8.5.12",
+    "typescript": "5.9.3"
+  },
+  "overrides": {
+    "axios": "1.20.0",
+    "find-my-way": "9.9.0",
+    "qs": "6.16.0",
+    "uuid": "14.0.2",
+    "csv-parse": "7.0.3",
+    "send": "1.2.1"
+  }
+}

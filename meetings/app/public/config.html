@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Configure AgentCore Meeting Assistant</title>
+  <script src="/vendor/teams-js/2.19.0/MicrosoftTeams.min.js"></script>
+</head>
+<body>
+  <p>Add the AgentCore Meeting Assistant to this meeting.</p>
+  <script>
+// DATA PROTECTION NOTE: this page runs in the user's Teams meeting context (user and meeting identifiers). Handling this data may be subject to
+// GDPR and similar frameworks. Under the AWS shared responsibility model, customers
+// deploying this sample are responsible for applicable data-protection requirements.
+// See https://aws.amazon.com/compliance/shared-responsibility-model/
+    microsoftTeams.app.initialize().then(function () {
+      microsoftTeams.pages.config.registerOnSaveHandler(function (saveEvent) {
+        microsoftTeams.pages.config.setConfig({
+          entityId: "agentcoreMeetingAssistant",
+          contentUrl: window.location.origin + "/sidepanel.html",
+          suggestedDisplayName: "AgentCore Assistant",
+        });
+        saveEvent.notifySuccess();
+      });
+      microsoftTeams.pages.config.setValidityState(true);
+    });
+  </script>
+</body>
+</html>

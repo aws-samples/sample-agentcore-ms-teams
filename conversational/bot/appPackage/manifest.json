@@ -1,0 +1,45 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.17",
+  "version": "1.0.0",
+  "id": "00000000-0000-0000-0000-000000000000",
+  "developer": {
+    "name": "AgentCore Demo",
+    "websiteUrl": "https://aws.amazon.com/bedrock/agentcore/",
+    "privacyUrl": "https://aws.amazon.com/privacy/",
+    "termsOfUseUrl": "https://aws.amazon.com/service-terms/"
+  },
+  "name": {
+    "short": "AgentCore Bot",
+    "full": "Amazon Bedrock AgentCore Teams Bot"
+  },
+  "description": {
+    "short": "AI agent powered by Amazon Bedrock AgentCore",
+    "full": "A conversational AI agent running on Amazon Bedrock AgentCore, integrated with Microsoft Teams via Entra ID authentication."
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "accentColor": "#FF9900",
+  "bots": [
+    {
+      "botId": "11111111-1111-1111-1111-111111111111",
+      "scopes": ["personal", "team", "groupChat"],
+      "supportsFiles": false,
+      "isNotificationOnly": false,
+      "commandLists": [
+        {
+          "scopes": ["personal"],
+          "commands": [
+            {"title": "help", "description": "Get help with using this bot"},
+            {"title": "status", "description": "Check agent status"},
+            {"title": "notify", "description": "Send a test notification"}
+          ]
+        }
+      ]
+    }
+  ],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": ["agentcore-teams-bot.YOUR-ENV.REGION.azurecontainerapps.io"]
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Sign In</title>
+  <script src="/vendor/teams-js/2.19.0/MicrosoftTeams.min.js"></script>
+</head>
+<body>
+<script>
+// DATA PROTECTION NOTE: this page starts the OAuth sign-in flow and handles user identity data (login hint, tenant and client IDs). Handling this data may be subject to
+// GDPR and similar frameworks. Under the AWS shared responsibility model, customers
+// deploying this sample are responsible for applicable data-protection requirements.
+// See https://aws.amazon.com/compliance/shared-responsibility-model/
+microsoftTeams.app.initialize().then(function () {
+  microsoftTeams.app.getContext().then(function (context) {
+    // Replace with your own Entra app (client) ID and tenant ID before deploying.
+    var clientId = "22222222-2222-2222-2222-222222222222";
+    var tenantId = "00000000-0000-0000-0000-000000000000";
+    var scope = encodeURIComponent("https://graph.microsoft.com/User.Read https://graph.microsoft.com/OnlineMeetings.Read https://graph.microsoft.com/OnlineMeetingTranscript.Read.All openid profile");
+    var loginHint = (context.user && context.user.loginHint) ? context.user.loginHint : "";
+    var redirectUri = encodeURIComponent(window.location.origin + "/auth-end.html");
+    var nonce = Math.random().toString(36).substring(2);
+    var state = Math.random().toString(36).substring(2);
+    var authUrl = "https://login.microsoftonline.com/" + tenantId +
+      "/oauth2/v2.0/authorize?client_id=" + clientId +
+      "&response_type=token&redirect_uri=" + redirectUri +
+      "&scope=" + scope + "&state=" + state + "&nonce=" + nonce +
+      "&login_hint=" + encodeURIComponent(loginHint);
+    window.location.assign(authUrl);
+  });
+});
+</script>
+<p>Redirecting to sign-in...</p>
+</body>
+</html>

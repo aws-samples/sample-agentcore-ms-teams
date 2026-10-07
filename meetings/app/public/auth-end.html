@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Auth Complete</title>
+  <script src="/vendor/teams-js/2.19.0/MicrosoftTeams.min.js"></script>
+</head>
+<body>
+  <script>
+// DATA PROTECTION NOTE: this page receives the OAuth sign-in result (user tokens) and returns it to Teams. Handling this data may be subject to
+// GDPR and similar frameworks. Under the AWS shared responsibility model, customers
+// deploying this sample are responsible for applicable data-protection requirements.
+// See https://aws.amazon.com/compliance/shared-responsibility-model/
+    microsoftTeams.app.initialize().then(function () {
+      var hash = window.location.hash.substring(1);
+      var p = {};
+      hash.split("&").forEach(function (kv) { var x = kv.split("="); p[x[0]] = decodeURIComponent(x[1] || ""); });
+      if (p["access_token"]) microsoftTeams.authentication.notifySuccess(p["access_token"]);
+      else microsoftTeams.authentication.notifyFailure(p["error"] || "AuthFailed");
+    });
+  </script>
+  <p>Completing sign-in…</p>
+</body>
+</html>

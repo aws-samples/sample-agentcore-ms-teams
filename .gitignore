@@ -1,0 +1,29 @@
+.env
+.env.local
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+.venv/
+venv/
+docs/
+*.egg-info/
+
+# AgentCore CLI-generated deploy state (contains account-specific ARNs/paths)
+**/.bedrock_agentcore.yaml
+.claude/settings.local.json
+.protoshield/
+
+# Teams app package build artifacts (regenerated at deploy time with real IDs/FQDNs)
+**/appPackage.zip
+notify/bot/appPackage/manifest.json
+obo/bot/appPackage/manifest.json
+meetings/app/appPackage/manifest.json
+.holmes/
+
+# macOS
+.DS_Store
+
+# CDK synth output (local build artifact; contains machine-specific paths)
+**/cdk.out/
