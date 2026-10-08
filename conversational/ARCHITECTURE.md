@@ -267,7 +267,7 @@ agentcore-msteams/
 |------|---------|---------|
 | Azure CLI (`az`) | >= 2.50 | Azure resource provisioning |
 | AWS CLI (`aws`) | >= 2.15 | AWS resource provisioning |
-| `bedrock-agentcore` CLI | >= 1.0.3 | AgentCore agent deployment |
+| `agentcore` CLI (`bedrock-agentcore-starter-toolkit`) | 0.3.14 | AgentCore agent deployment |
 | Node.js | >= 20.x | Teams bot build |
 | Python | >= 3.12 | AgentCore agent |
 | Docker | >= 24.x | Container image build |
