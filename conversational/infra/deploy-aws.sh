@@ -26,7 +26,7 @@ set -euo pipefail
 #
 # Prerequisites:
 #   - AWS CLI v2 installed and configured
-#   - bedrock-agentcore CLI installed (pip install bedrock-agentcore==1.0.3)
+#   - agentcore CLI installed (pip install bedrock-agentcore-starter-toolkit==0.3.14)
 #   - Azure deployment completed (need BOT_APP_ID, TENANT_ID, BOT_NOTIFY_URL)
 #   - Appropriate AWS permissions (IAM, Bedrock AgentCore)
 #

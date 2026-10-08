@@ -10,7 +10,7 @@ tenant. Each demo is self-contained in its own top-level folder.
 
 ## Prerequisites
 
-- Azure CLI (`az login`), AWS CLI v2, Node 18+/20, Python 3.10+, `agentcore` CLI
+- Azure CLI (`az login`), AWS CLI v2, Node 18+/20, Python 3.10+, AgentCore starter toolkit (`pip install bedrock-agentcore-starter-toolkit==0.3.14`, provides the `agentcore` CLI the scripts use)
 - M365 tenant with Teams; Bedrock model access (Claude Sonnet) in `us-east-1`
 
 ## Demos

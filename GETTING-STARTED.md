@@ -39,9 +39,11 @@ Every demo is self-contained under its own folder (`conversational/`, `obo/`,
 brew install azure-cli awscli node python@3.12 jq
 brew install --cask ...        # nothing extra needed
 
-# AgentCore CLI
-pip install bedrock-agentcore==1.0.3    # provides the `agentcore` command
-# (or: npx @aws/agentcore)
+# AgentCore starter toolkit (provides the `agentcore` command the deploy scripts use)
+pip install bedrock-agentcore-starter-toolkit==0.3.14
+# NOTE: the newer npm-based AgentCore CLI (@aws/agentcore) uses different
+# commands (no `agentcore configure`) and is NOT compatible with these scripts.
+# If both are installed, make sure `which agentcore` resolves to the pip one.
 
 # Verify
 az version
