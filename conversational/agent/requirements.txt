@@ -93,7 +93,7 @@ markdown-it-py==4.2.0
     # via rich
 markdownify==1.2.3
     # via strands-agents-tools
-mcp==2.1.1
+mcp==2.2.0
     # via strands-agents
 mcp-types==2.1.1
     # via mcp
