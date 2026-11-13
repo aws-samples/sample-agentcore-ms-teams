@@ -105,7 +105,7 @@ multidict==6.9.1
     # via
     #   aiohttp
     #   yarl
-opentelemetry-api==1.44.0
+opentelemetry-api==1.45.2
     # via
     #   mcp
     #   opentelemetry-instrumentation
